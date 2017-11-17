@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between mb-5">
+  <div class="container">
+    <a class="navbar-brand" href="/login"><h2 class="display-6">Login</h2></a>
+  </div>
+</nav>
+
+<div class="container">
+  <div class="row mt-5">
+    <div class="col-md-4"></div>
+
+    <div class="col-md-6 col-xs-12">
+      <div class="card col-md-8 col-xs-8 px-3 py-4">
+        <form class="form-signin" action="/login" method="post">
+          {{#if messages.success}}
+            <div class="alert alert-success" role="alert">
+              {{messages.success}}
+            </div>
+          {{/if}}
+
+          <p class="col-md-12 text-md-center mt-2">Login to answer this question</p>
+          <input type="text" class="form-control mb-1" name="name" placeholder="Username" required autofocus>
+          <input type="password" class="form-control mb-1" name="passkey" placeholder="Password" required>
+          <button class="btn btn-lg btn-primary btn-block  mt-2" type="submit">Log in</button>
+          <div class="col-md-12 text-md-center mt-2">
+          <input type="checkbox" checked="checked"> Remember me
+          <span class="psw">Forgot <a href="home">password?</a></span>
+          </div>
+      </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+</div>
