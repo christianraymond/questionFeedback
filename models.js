@@ -32,5 +32,4 @@ employeesModel.index({
 
 
 const EmployeesName = mongoose.model('EmployeesName', employeesModel);
-
 module.exports = EmployeesName;

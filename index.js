@@ -2,6 +2,18 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const handlebars = require('express-handlebars');
+const flash = require('express-flash');
+const session = require('express-session');
+
+
+app.use(session({
+  secret: 'keyboard cat',
+  cookie: {
+    maxAge: 6000 * 30
+  }
+}));
+
+app.use(flash());
 
 const mongoose = require('mongoose');
 const Models = require('./models');
@@ -17,18 +29,21 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 
+app.get('/', function(req, res){
+  res.render('home')
+})
 app.get('/about', function(req, res) {
   res.render('about');
 })
 
-app.get('/login', function(req, res) {
-  res.render('login');
-});
+
 app.get('/answering', function(req, res) {
   res.render('answering');
 });
 
-app.get('/home', employeesroute.index)
+app.get('/home', employeesroute.index);
+app.get('/login', employeesroute.loginFunc);
+app.post('/login', employeesroute.giveLoginAccess);
 
 app.use(express.static("public"));
 app.set('port', process.env.PORT || 3000);
