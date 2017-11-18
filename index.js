@@ -3,29 +3,32 @@ const app = express();
 const bodyParser = require("body-parser");
 const handlebars = require('express-handlebars');
 
-app.engine('handlebars', handlebars({defaultLayout: 'main'}));
-app.set('view engine', 'handlebars');
+const mongoose = require('mongoose');
+const Models = require('./models');
+const EmployeesRoute = require('./employees.js');
+const employeesroute = EmployeesRoute(Models);
 
+app.engine('handlebars', handlebars({
+  defaultLayout: 'main'
+}));
+app.set('view engine', 'handlebars');
 
 app.use(bodyParser.urlencoded({
   extended: false
 }))
-app.get('/home', function(req, res){
-  res.render('home');
-})
 
-
-app.get('/about', function(req, res){
+app.get('/about', function(req, res) {
   res.render('about');
 })
 
-app.get('/login', function (req, res) {
-    res.render('login');
+app.get('/login', function(req, res) {
+  res.render('login');
 });
-app.get('/answering', function (req, res) {
-    res.render('answering');
+app.get('/answering', function(req, res) {
+  res.render('answering');
 });
 
+app.get('/home', employeesroute.index)
 
 app.use(express.static("public"));
 app.set('port', process.env.PORT || 3000);

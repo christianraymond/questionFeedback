@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark justify-content-between mb-3">
   <div class="container">
-    <a class="navbar-brand" href="#"><h2 class="display-6">Employee's Answering</h2></a>
+    <a class="navbar-brand" href="#"><h2 class="display-6">Employee answering</h2></a>
 
-    <a class="btn btn-primary" type="submit" href="/login" role="button">Edit your name?</a>
+    <a class="btn btn-primary" type="submit" href="/login" role="button">Edit Name?</a>
   </div>
 </nav>
 
@@ -10,38 +10,40 @@
   <div class="col-md-12">
     <div class="jumbotron jumbotron-fluid pt-4">
       <div class="container">
-        <form class="form-signin" action="/employees/{{username}} " method="post">
-        <h1 class="display-5">Welcome, {{username}}</h1>
-        <p class="lead mb-4">Please select your answer here:</p>
+        <form class="form-signin" action="/response/{{username}} " method="post">
+          <h1 class="display-5">Welcome, {{username}}</h1>
+          <p class="lead mb-4">Please select one of the answer below:</p>
 
-        {{#if messages.success}}
-          <div class="alert alert-success" role="alert">
+          {{#if messages.success}}
+            <div class="alert alert-success" role="alert">
               {{messages.success}}
-          </div>
-        {{/if}}
+            </div>
+          {{/if}}
 
-        <div class="col-md-12 text-center mb-3">
-          <div class="btn-group" data-toggle="buttons">
-            <label class="btn btn-outline-danger {{#if answer.Yes}}active{{/if}}">
-              <input type="checkbox" name="answer" value="Yes">Yes
-            </label>
-            <label class="btn btn-outline-danger {{#if answer.No}}active{{/if}}">
-              <input type="checkbox" name="answer"  value="No">No
-            </label>
-            <label class="btn btn-outline-danger {{#if answer.Null}}active{{/if}}">
-              <input type="checkbox" name="answer" value="Null">Null
-            </label>
+          <div class="col-md-12 text-center mb-3">
+            <div class="btn-group" data-toggle="buttons">
+              <input type="checkbox" name="answer" value="Yes" {{#if response.Yes}} checked {{/if}}> Yes
+              <input type="checkbox" name="answer" value="No" {{#if response.No}} checked {{/if}}> No
+              <input type="checkbox" name="answer" value="Null" {{#if response.Null}} checked {{/if}}> Null
+            </div>
+          <!-- //All only one checkbox to be selected       -->
+            <script>
+              $(document).ready(function() {
+                $('input:checkbox').click(function() {
+                  $('input:checkbox').not(this).prop('checked', false);
+                });
+              });
+            </script>
           </div>
-        </div>
 
-        <div class="row">
-          <div class="col-md-3"></div>
-          <div class="col-md-6">
-            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+          <div class="row">
+            <div class="col-md-3"></div>
+            <div class="col-md-6">
+              <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+            </div>
           </div>
-        </div>
       </div>
-    </form>
-  </div>
+      </form>
+    </div>
   </div>
 </div>
