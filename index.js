@@ -36,14 +36,16 @@ app.get('/about', function(req, res) {
   res.render('about');
 })
 
-
-app.get('/answering', function(req, res) {
-  res.render('answering');
-});
+// app.get('/answering', function(req, res) {
+//   res.render('answering');
+// });
 
 app.get('/home', employeesroute.index);
 app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);
+
+app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
+app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
 
 app.use(express.static("public"));
 app.set('port', process.env.PORT || 3000);

@@ -20,7 +20,7 @@ const EmployeesSchema = mongoose.Schema;
   },
 
   password: String,
-  answers: []
+  answers: {}
 
 });
 //Avoiding duplicates in employee's Schema

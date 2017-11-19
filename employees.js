@@ -21,7 +21,10 @@ module.exports = function(models) {
   }
 
   function giveLoginAccess(req, res, next) {
-    var name = req.body.name;
+    const capitalize = req.body.name.substring(0, 1);
+    const toUpperCase = req.body.name.substring(0, 1).toUpperCase()
+    const name = req.body.name.replace(capitalize, toUpperCase);
+    // var name = req.body.name
     var passkey = req.body.passkey;
     var confirmPasskey = req.body.confirmPasskey;
 
@@ -32,27 +35,60 @@ module.exports = function(models) {
 
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
-      res.redirect('/login');
+      res.render('login');
     } else {
       user.save(function(err, allUsers) {
         if (err) {
           if (err.code === 11000) {
-            req.flash('error', 'This user already existed!');
-            res.redirect('/answering');
+            req.flash('success', 'Welcome back ' + name + '!');
+            res.render('answering')
           }
-      } else {
-        console.log(allUsers);
-        req.flash('success', 'Please select one of the answers below!');
-        res.redirect('/answering')
-       }
-     })
+        }
+        // if (name == 'Admin' && passkey == 'admin') {
+        //   redirect('/admin')
+        else {
+          console.log(allUsers);
+          req.flash('success', 'Hello, ' + name + ' Please select one of the answers below!');
+          res.render('answering')
+        }
+      })
     }
-
   }
+
+  function employeesFeedbackStatus(req, res, next) {
+    const capitalize = req.params.username.substring(0, 1);
+    const toUpperCase = req.params.username.substring(0, 1).toUpperCase()
+    const name = req.params.username.replace(capitalize, toUpperCase);
+    var answerResponse = req.body.answer;
+
+    models.findOne({
+      username: name
+    }, function(err, user) {
+      if (err) {
+        console.log(err);
+      } else {
+        console.log("*********");
+        console.log(user);
+        user.answers = answerResponse;
+        user.save({}, function(err, updatedUser) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(updatedUser);
+            console.log("********");
+            req.flash('success', 'Your responsive will be saved');
+            res.redirect('/answering/' + updatedUser.username)
+          }
+        })
+      }
+    })
+
+  };
 
   return {
     index,
     loginFunc,
-    giveLoginAccess
+    giveLoginAccess,
+    employeesFeedbackStatus
   }
-};
+}
