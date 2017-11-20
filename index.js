@@ -36,10 +36,6 @@ app.get('/about', function(req, res) {
   res.render('about');
 })
 
-// app.get('/answering', function(req, res) {
-//   res.render('answering');
-// });
-
 app.get('/home', employeesroute.index);
 app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);

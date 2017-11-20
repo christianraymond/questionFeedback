@@ -5,7 +5,7 @@ module.exports = function(models) {
       if (err) {
         return next(err)
       } else {
-        res.render('home', {})
+        console.log('Hello world!');
       }
     })
   }
@@ -21,12 +21,13 @@ module.exports = function(models) {
   }
 
   function giveLoginAccess(req, res, next) {
-    const capitalize = req.body.name.substring(0, 1);
-    const toUpperCase = req.body.name.substring(0, 1).toUpperCase()
-    const name = req.body.name.replace(capitalize, toUpperCase);
-    // var name = req.body.name
+    // const capitalize = req.body.name.substring(0, 1);
+    // const toUpperCase = req.body.name.substring(0, 1).toUpperCase()
+    // const name = req.body.name.replace(capitalize, toUpperCase);
+    const name = req.body.name;
     var passkey = req.body.passkey;
     var confirmPasskey = req.body.confirmPasskey;
+    var answer = req.body.answer
 
     var user = new models({
       username: name,
@@ -36,54 +37,71 @@ module.exports = function(models) {
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
       res.render('login');
-    } else {
-      user.save(function(err, allUsers) {
-        if (err) {
-          if (err.code === 11000) {
-            req.flash('success', 'Welcome back ' + name + '!');
-            res.render('answering')
-          }
-        }
-        // if (name == 'Admin' && passkey == 'admin') {
-        //   redirect('/admin')
-        else {
-          console.log(allUsers);
-          req.flash('success', 'Hello, ' + name + ' Please select one of the answers below!');
-          res.render('answering')
-        }
-      })
     }
+    models.findOne({
+      username: name
+    }, function(err, employee) {
+      if (err) {
+        return next(err)
+      } else if (employee) {
+        req.flash('success', 'Hello, welcome back ' + user.username + "!")
+        res.render('answering', {
+          username: employee.user,
+          answers: employee.answer
+        });
+      } else {
+        models.create({
+          username: name
+        }, function(err, employee) {
+          if (err) {
+            return next(err)
+          } else {
+            req.flash('success', 'You have successfully added your name');
+            res.render('answering', {
+              username: name
+            });
+          }
+        });
+      };
+    });
   }
 
   function employeesFeedbackStatus(req, res, next) {
-    const capitalize = req.params.username.substring(0, 1);
-    const toUpperCase = req.params.username.substring(0, 1).toUpperCase()
-    const name = req.params.username.replace(capitalize, toUpperCase);
-    var answerResponse = req.body.answer;
+      var answersObject = {};
+      const capitalize = req.params.name.substring(0, 1);
+      const toUpperCase = req.params.name.substring(0, 1).toUpperCase()
+      const name = req.params.name.replace(capitalize, toUpperCase);
+      var answer = req.body.answer;
 
-    models.findOne({
-      username: name
-    }, function(err, user) {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log("*********");
-        console.log(user);
-        user.answers = answerResponse;
-        user.save({}, function(err, updatedUser) {
-          if (err) {
-            console.log(err);
-          } else {
-            console.log(updatedUser);
-            console.log("********");
-            req.flash('success', 'Your responsive will be saved');
-            res.redirect('/answering/' + updatedUser.username)
-          }
-        })
+      var user = new models({
+        username: name,
+        password: passkey
+      })
+
+
+      if (!Array.isArray(answer)) {
+        answer = [answer]
       }
-    })
-
-  };
+      answer.forEach(function(singAnswer) {
+        answersObject[singAnswer] = true
+      });
+      models.findOneAndUpdate({
+        username: name
+      }, {
+        answers: answersObject
+      }, function(err, reply) {
+        if (err) {
+          console.log(err);
+        } else if (!reply) {
+          models.employeesFeedbackStatus.create({
+            username: name,
+            answers: answersObject
+          });
+        }
+      });
+      req.flash('success', "Hello, " + user.username + " Your response has been saved.")
+      res.redirect('/answering/' + user);
+    }
 
   return {
     index,

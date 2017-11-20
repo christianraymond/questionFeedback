@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <!-- <link rel="stylesheet" href="../css/style.css" media="screen" title="no title"> -->
+
 <head>
   <!-- References a Handlebars partial in views/partials/head.handlebars -->
   {{>head}}
@@ -10,21 +11,21 @@
 
 <body>
 
-<!-- References a Handlebars partial in views/partials/bsnavbar.handlebars -->
-{{>bsnavbar}}
+  <!-- References a Handlebars partial in views/partials/bsnavbar.handlebars -->
+  {{>bsnavbar}}
 
-<!-- The HTML for each view goes here -->
-<div class="container">
-{{{body}}}
-  
-{{#if messages.error}}
-  <div class="alert alert-error" role="alert">
-    {{messages.error}}
-  </div>
-{{/if}}
+  <!-- The HTML for each view goes here -->
+  <div class="container">
+    {{{body}}}
 
+  {{#if messages.error}}
+    <div class="alert alert-danger" role="alert">
+      {{messages.error}}
+    </div>
+  {{/if}}
 </div>
 
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
+
 </html>
