@@ -38,7 +38,20 @@ module.exports = function(models) {
       req.flash('error', 'Please enter the same password');
       res.render('login');
     }
-    models.findOne({
+
+    Model.findById = function findById(id, projection, options, callback) {
+      if (typeof id === 'undefined') {
+        id = null;
+      }
+
+      if (callback) {
+        callback = this.$wrapCallback(callback);
+      }
+
+      return this.findOne({_id: id}, projection, options, callback);
+    };
+
+    models.findById({
       username: name
     }, function(err, employee) {
       if (err) {

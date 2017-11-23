@@ -20,7 +20,7 @@ const EmployeesSchema = mongoose.Schema;
   },
 
   password: String,
-  answers: {}
+  answers: []
 
 });
 //Avoiding duplicates in employee's Schema
@@ -32,4 +32,5 @@ employeesModel.index({
 
 
 const EmployeesName = mongoose.model('EmployeesName', employeesModel);
+
 module.exports = EmployeesName;

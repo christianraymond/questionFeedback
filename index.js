@@ -9,9 +9,7 @@ const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   cookie: {
-    maxAge: 6000 * 30
-  }
-}));
+    maxAge: 6000 * 30}, resave: true, saveUninitialized: true}));
 
 app.use(flash());
 
