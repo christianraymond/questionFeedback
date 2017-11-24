@@ -38,30 +38,21 @@ module.exports = function(models) {
       req.flash('error', 'Please enter the same password');
       res.render('login');
     }
-
-    Model.findById = function findById(id, projection, options, callback) {
-      if (typeof id === 'undefined') {
-        id = null;
+    models.findOne({username: name} , function(err, employee) {
+      // console.log(employee);
+      if (typeof employee._id === 'undefined') {
+        console.log(employee._id);
+        employee._id = null;
       }
-
-      if (callback) {
-        callback = this.$wrapCallback(callback);
-      }
-
-      return this.findOne({_id: id}, projection, options, callback);
-    };
-
-    models.findById({
-      username: name
-    }, function(err, employee) {
-      if (err) {
-        return next(err)
-      } else if (employee) {
-        req.flash('success', 'Hello, welcome back ' + user.username + "!")
-        res.render('answering', {
-          username: employee.user,
-          answers: employee.answer
-        });
+      else if(employee) {
+        // employee = this.$wrapCallback(employee);
+        console.log(employee + " success");
+        req.flash('success', 'Welcome')
+        res.redirect('/answering/' + employee.username)
+      } else if (true) {
+        return this.findOne
+        _id: id,
+          employee
       } else {
         models.create({
           username: name
@@ -80,41 +71,46 @@ module.exports = function(models) {
   }
 
   function employeesFeedbackStatus(req, res, next) {
-      var answersObject = {};
-      const capitalize = req.params.name.substring(0, 1);
-      const toUpperCase = req.params.name.substring(0, 1).toUpperCase()
-      const name = req.params.name.replace(capitalize, toUpperCase);
-      var answer = req.body.answer;
+    var answersObject = {};
+    const name = req.params.username;
+    // const toUpperCase = req.params.name.substring(0, 1).toUpperCase()
+    const newName = name.substring(0,1).toUpperCase() + name.substring(1);
 
-      var user = new models({
-        username: name,
-        password: passkey
-      })
+    // const name = req.params.name.replace(capitalize, toUpperCase);
+    var answer = req.body.answer;
+
+    var user = new models({
+      username: newName,
+      password: passkey
+    })
 
 
-      if (!Array.isArray(answer)) {
-        answer = [answer]
-      }
-      answer.forEach(function(singAnswer) {
-        answersObject[singAnswer] = true
-      });
-      models.findOneAndUpdate({
-        username: name
-      }, {
-        answers: answersObject
-      }, function(err, reply) {
-        if (err) {
-          console.log(err);
-        } else if (!reply) {
-          models.employeesFeedbackStatus.create({
-            username: name,
-            answers: answersObject
-          });
-        }
-      });
-      req.flash('success', "Hello, " + user.username + " Your response has been saved.")
-      res.redirect('/answering/' + user);
+    if (!Array.isArray(answer)) {
+      answer = [answer]
     }
+    answer.forEach(function(singAnswer) {
+      answersObject[singAnswer] = true
+    });
+    models.findOneAndUpdate({
+      username: newName
+    }, {
+      answers: answersObject
+    }, function(err, reply) {
+      if (err) {
+        console.log(err);
+      } else if (!reply) {
+        models.employeesFeedbackStatus.create({
+          username: newName,
+          answers: answersObject
+        });
+      }
+    });
+    req.flash('success', "Hello, " + user.username + " Your response has been saved.")
+    res.render('answering',{
+      username: newName,
+      answers: answersObject
+    });
+  }
 
   return {
     index,
