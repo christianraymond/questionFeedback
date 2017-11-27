@@ -30,7 +30,5 @@ employeesModel.index({
   unique: true
 });
 
-
 const EmployeesName = mongoose.model('EmployeesName', employeesModel);
-
 module.exports = EmployeesName;

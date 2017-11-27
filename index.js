@@ -34,12 +34,12 @@ app.get('/about', function(req, res) {
   res.render('about');
 })
 
-app.get('/home', employeesroute.index);
+app.get('/home', employeesroute.loginFunc);
 app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);
 
-app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
-app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
+app.get('/answering', employeesroute.employeesFeedbackStatus);
+app.post('/answering', employeesroute.employeesFeedbackStatus);
 
 app.use(express.static("public"));
 app.set('port', process.env.PORT || 3000);
