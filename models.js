@@ -12,7 +12,7 @@ mongoose.connect(mongoURL, {
 })
 
 const EmployeesSchema = mongoose.Schema;
-  const employeesModel = new EmployeesSchema({
+const employeesModel = new EmployeesSchema({
   username: {
     type: String,
     unique: true,
@@ -20,7 +20,7 @@ const EmployeesSchema = mongoose.Schema;
   },
 
   password: String,
-  answers: []
+  answers: {}
 
 });
 //Avoiding duplicates in employee's Schema

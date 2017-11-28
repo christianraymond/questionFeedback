@@ -9,7 +9,11 @@ const session = require('express-session');
 app.use(session({
   secret: 'keyboard cat',
   cookie: {
-    maxAge: 6000 * 30}, resave: true, saveUninitialized: true}));
+    maxAge: 6000 * 30
+  },
+  resave: true,
+  saveUninitialized: true
+}));
 
 app.use(flash());
 
@@ -22,16 +26,20 @@ app.engine('handlebars', handlebars({
   defaultLayout: 'main'
 }));
 app.set('view engine', 'handlebars');
-
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }))
 
-app.get('/', function(req, res){
+app.get('/', function(req, res) {
   res.render('home')
 })
 app.get('/about', function(req, res) {
   res.render('about');
+})
+
+app.get('/admin', function(req, res) {
+  res.render('admin');
 })
 
 app.get('/home', employeesroute.loginFunc);
@@ -40,6 +48,7 @@ app.post('/login', employeesroute.giveLoginAccess);
 
 app.get('/answering', employeesroute.employeesFeedbackStatus);
 app.post('/answering', employeesroute.employeesFeedbackStatus);
+app.get('/admin', employeesroute.adminAccess);
 
 app.use(express.static("public"));
 app.set('port', process.env.PORT || 3000);

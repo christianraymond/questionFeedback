@@ -11,18 +11,17 @@ module.exports = function(models) {
   }
 
   function giveLoginAccess(req, res, next) {
-    const answersObject = {}
+    const answersObject = {};
     const name1 = req.body.name;
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
-    const asnswer = req.body.answer
-
+    const answer = req.body.answer
 
     var user = new models({
       username: name,
       password: passkey,
-      answers: {}
+      answers: answer
     })
 
     if (passkey != confirmPasskey) {
@@ -40,12 +39,13 @@ module.exports = function(models) {
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
         res.render('answering', {
           username: employee.username,
-          password: passkey.password,
+          password: employee.password,
+          answers: employee.answers
         });
       } else if (!employee) {
         models.create({
             username: name,
-            password: passkey
+            password: passkey,
           }, function(err, employee) {
             if (err) {
               return next(err)
@@ -53,10 +53,10 @@ module.exports = function(models) {
           })
           .then(function(employee) {
             console.log(employee);
-            req.flash("success", "Hello " + employee.username +" you have successfully registered your name!");
+            req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
             res.render('login', {
               username: employee,
-              password: passkey
+              password: passkey,
             })
           });
       };
@@ -64,7 +64,7 @@ module.exports = function(models) {
   }
 
   function employeesFeedbackStatus(req, res, next) {
-    const answersObject = {}
+    const answersObject = {};
     const name1 = req.body.name;
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
@@ -74,52 +74,89 @@ module.exports = function(models) {
     var user = new models({
       username: name,
       password: passkey,
-      answers: answersObject
+      answers: answer
     })
 
 
-    if (!Array.isArray(answer)) {
-      answer = [answer]
+    if (!Array.isArray(asnswer)) {
+      asnswer = [asnswer]
     }
-    answer.forEach(function(singAnswer) {
+    asnswer.forEach(function(singAnswer) {
       answersObject[singAnswer] = true
     });
     models.findOneAndUpdate({
-      username: name
-    },
-      {
-        password: passkey
-      },
-    {
+      username: name,
+      password: passkey,
       answers: answersObject
     }, function(err, reply) {
       if (err) {
         console.log(err);
       } else if (!reply) {
-        models.create({
-          username: name,
-        },
-         {
-          answers: answersObject
-        }, function(err, response) {
-          if (err) {
-            return next(err)
-          } else if (response) {
-            req.flash("success", "Hello, " + user.username + " Your response has been saved.")
-            res.render('answering', {
-              username: name,
-              answers: answersObject
+        models.giveLoginAccess.create({
+            username: name,
+            password: passkey,
+            answers: answersObject
+          }),
 
-            })
+          req.flash("success", "Hello, " + user.username + " Your response has been saved.")
+        res.render('answering', {
+          username: name,
+          password: passkey,
+          answers: answersObject
+        })
+      };
+    })
+  }
+
+  function countEmployees(employeesCounter) {
+    if (employeesCounter === 6) {
+      return 'Enough'
+    } else if (employeesCounter > 26) {
+      return 'Aything'
+    } else {
+      return 'Another thing'
+    }
+  };
+
+  function adminAccess(req, res, next) {
+    Yes = [];
+    No = [];
+    Null = [];
+    models.find({}, function(err, reply) {
+      if (err) {
+        return next(err)
+      } else {
+        for (const x = 0; x < reply.length; x++) {
+          const responsess = reply[x].answers;
+          for (const oneAnswer in responsess) {
+            if (oneAnswer === "Yes") {
+              Yes.push(reply[x].username)
+            } else if (oneAnswer === "No") {
+              No.push(reply[x].username)
+            } else if (oneAnswer === "Null") {
+              Null.push(reply[x].username)
+            }
           }
-        });
+        }
       }
+      res.render("admin", {
+        posResponseNames: Yes,
+        posResponseNamesCounter: Yes.length,
+
+        negReponseNames: No,
+        negReponseNamesCounter: No.length,
+
+        nullResponseNames: Null,
+        nullResponseNamesCounter: Null.length
+      });
     });
   }
 
   return {
     loginFunc,
     giveLoginAccess,
-    employeesFeedbackStatus
+    employeesFeedbackStatus,
+    countEmployees,
+    adminAccess
   }
 }
