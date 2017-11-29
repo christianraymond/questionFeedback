@@ -46,7 +46,7 @@ app.get('/home', employeesroute.loginFunc);
 app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);
 
-app.get('/answering', employeesroute.employeesFeedbackStatus);
+app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
 app.post('/answering', employeesroute.employeesFeedbackStatus);
 app.get('/admin', employeesroute.adminAccess);
 

@@ -5,23 +5,25 @@ module.exports = function(models) {
       if (err) {
         return next(err)
       } else {
-        res.render('login', {})
+        res.render('login', {
+          person: employees
+        });
       }
-    })
+    });
   }
 
   function giveLoginAccess(req, res, next) {
     const answersObject = {};
     const name1 = req.body.name;
-    const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
+    const userName = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
-    const answer = req.body.answer
+    const allAnswers = req.body.answer
 
     var user = new models({
-      username: name,
+      username: userName,
       password: passkey,
-      answers: answer
+      answers: allAnswers
     })
 
     if (passkey != confirmPasskey) {
@@ -30,48 +32,50 @@ module.exports = function(models) {
     }
 
     models.findOne({
-      username: name,
+      username: userName,
       password: passkey
     }, function(err, employee) {
       if (err) {
-        return res.send()
+        return next(err);
       } else if (employee) {
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
-        res.redirect('/answering/' + employee.username)
+        res.redirect('/answering/' + employee);
       } else if (!employee) {
         models.create({
-            username: name,
-            password: passkey,
-          }, function(err, employee) {
-            if (err) {
-              return next(err)
-            }
-          })
-          .then(function(employee) {
-            console.log(employee);
+          username: employee,
+          password: passkey
+        }, function(err, user) {
+          if (err) {
+            return next(err)
+          } else {
             req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
             res.render('login', {
               username: employee,
               password: passkey,
-            })
-          });
+            });
+          }
+        });
       };
     });
   }
 
   function employeesFeedbackStatus(req, res, next) {
-    const answersObject = {};
-    const name = req.body.name;
+    var answersObject = {};
+
+    const capitalize = req.params.username.substring(0, 1);
+    const toUpperCase = req.params.username.substring(0, 1).toUpperCase()
+    const userName = req.params.username.replace(capitalize, toUpperCase);
+
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
-    const allAnswers = req.body.answer
+    var allAnswers = req.body.answer;
+    console.log(allAnswers);
 
     var user = new models({
-      username: name,
+      username: userName,
       password: passkey,
       answers: allAnswers
     })
-
 
     if (!Array.isArray(allAnswers)) {
       allAnswers = [allAnswers]
@@ -81,34 +85,35 @@ module.exports = function(models) {
     });
 
     models.findOneAndUpdate({
-      username: name,
-      password: passkey,
+      username: userName
+    }, {
+      password: passkey
+    }, {
       answers: answersObject
     }, function(err, reply) {
       if (err) {
         console.log(err);
       } else if (!reply) {
         models.giveLoginAccess.create({
-            username: name,
+            username: userName,
             password: passkey,
             answers: answersObject
           }),
-          console.log(username.name);
-        req.flash("success", "Hello, " + user.username + " Your response has been saved.")
-        res.redirect('/answering/' + username.name)
-      };
+          req.flash("success", "Hello, " + userName.username + " Your response has been saved.");
+        res.redirect('/answering/' + userName.userName)
+      }
     })
   }
 
   function countEmployees(employeesCounter) {
-    if (employeesCounter === 6) {
-      return 'Enough'
-    } else if (employeesCounter > 26) {
-      return 'Aything'
+    if (employeesCounter === 3) {
+      return 'bg-success'
+    } else if (employeesCounter > 3) {
+      return 'bg-warning'
     } else {
-      return 'Another thing'
+      return 'big-danger'
     }
-  };
+  }
 
   function adminAccess(req, res, next) {
     Yes = [];
@@ -131,18 +136,19 @@ module.exports = function(models) {
           }
         }
       }
-      res.render("admin", {
-        posResponseNames: Yes,
-        posResponseNamesCounter: Yes.length,
+    })
+    res.render("admin", {
+      posResponseNames: Yes,
+      posResponseNamesCounter: Yes.length,
 
-        negReponseNames: No,
-        negReponseNamesCounter: No.length,
+      negReponseNames: No,
+      negReponseNamesCounter: No.length,
 
-        nullResponseNames: Null,
-        nullResponseNamesCounter: Null.length
-      });
+      nullResponseNames: Null,
+      nullResponseNamesCounter: Null.length
     });
-  }
+  };
+
 
   return {
     loginFunc,

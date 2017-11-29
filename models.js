@@ -20,7 +20,7 @@ const employeesModel = new EmployeesSchema({
   },
 
   password: String,
-  answers: {}
+  answers: Object
 
 });
 //Avoiding duplicates in employee's Schema
