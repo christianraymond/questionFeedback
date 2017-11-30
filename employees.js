@@ -11,11 +11,12 @@ module.exports = function(models) {
   }
 
   function giveLoginAccess(req, res, next) {
-    const answersObject = {};
     const name1 = req.body.name;
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
+
+    const answersObject = {};
     const answer = req.body.answer
 
     var user = new models({
@@ -33,11 +34,13 @@ module.exports = function(models) {
       username: name,
       password: passkey
     }, function(err, employee) {
+      console.log(employee);
       if (err) {
         return res.send()
       } else if (employee) {
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
         res.redirect('/answering/' + employee.username)
+
       } else if (!employee) {
         models.create({
             username: name,
@@ -61,7 +64,8 @@ module.exports = function(models) {
 
   function employeesFeedbackStatus(req, res, next) {
     const answersObject = {};
-    const name = req.body.name;
+    const name1 = req.params.username;
+    const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
     const allAnswers = req.body.answer
@@ -71,7 +75,7 @@ module.exports = function(models) {
       password: passkey,
       answers: allAnswers
     })
-
+    console.log(allAnswers);
 
     if (!Array.isArray(allAnswers)) {
       allAnswers = [allAnswers]

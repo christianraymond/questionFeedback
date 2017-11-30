@@ -47,7 +47,7 @@ app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);
 
 app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
-app.post('/answering', employeesroute.employeesFeedbackStatus);
+app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
 app.get('/admin', employeesroute.adminAccess);
 
 app.use(express.static("public"));
