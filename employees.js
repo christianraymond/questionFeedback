@@ -15,32 +15,34 @@ module.exports = function(models) {
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
+    var answersObject = {};
+    var allAnswers = req.body.answer;
 
-    const answersObject = {};
-    const answer = req.body.answer
 
     var user = new models({
       username: name,
       password: passkey,
-      answers: answer
+      answers: allAnswers
     })
 
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
       res.redirect('/login');
     }
-
     models.findOne({
       username: name,
       password: passkey
     }, function(err, employee) {
-      console.log(employee);
       if (err) {
-        return res.send()
+        return res.send();
       } else if (employee) {
+        console.log(employee);
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
-        res.redirect('/answering/' + employee.username)
-
+        res.render('answering', { 
+          username: employee.username,
+          password: passkey,
+          answers: employee.answer
+        })
       } else if (!employee) {
         models.create({
             username: name,
@@ -50,32 +52,34 @@ module.exports = function(models) {
               return next(err)
             }
           })
-          .then(function(employee) {
-            console.log(employee);
-            req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
-            res.render('login', {
-              username: employee,
-              password: passkey,
-            })
+          .then(function(err, employee) {
+            if (err) {
+              return res.send();
+            } else {
+              req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
+              res.render('login', {
+                username: employee,
+                password: passkey,
+              })
+            }
           });
       };
     });
   }
 
   function employeesFeedbackStatus(req, res, next) {
-    const answersObject = {};
+    var answersObject = {};
     const name1 = req.params.username;
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
-    const allAnswers = req.body.answer
+    var allAnswers = req.body.answer
 
     var user = new models({
       username: name,
       password: passkey,
       answers: allAnswers
-    })
-    console.log(allAnswers);
+    });
 
     if (!Array.isArray(allAnswers)) {
       allAnswers = [allAnswers]
@@ -97,8 +101,7 @@ module.exports = function(models) {
             password: passkey,
             answers: answersObject
           }),
-          console.log(username.name);
-        req.flash("success", "Hello, " + user.username + " Your response has been saved.")
+          req.flash("success", "Hello, " + user.username + " Your response has been saved.")
         res.redirect('/answering/' + username.name)
       };
     })

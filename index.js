@@ -42,10 +42,8 @@ app.get('/admin', function(req, res) {
   res.render('admin');
 })
 
-app.get('/home', employeesroute.loginFunc);
 app.get('/login', employeesroute.loginFunc);
 app.post('/login', employeesroute.giveLoginAccess);
-
 app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
 app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
 app.get('/admin', employeesroute.adminAccess);

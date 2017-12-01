@@ -7,7 +7,7 @@ mongoose.connect(mongoURL, {
   if (err) {
     console.log(err);
   } else {
-    console.log('Database ready to use used...!');
+    console.log('Database ready to be used...!');
   }
 })
 
@@ -20,7 +20,7 @@ const employeesModel = new EmployeesSchema({
   },
 
   password: String,
-  answers: []
+  answers: Object
 
 });
 //Avoiding duplicates in employee's Schema

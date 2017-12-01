@@ -17,13 +17,12 @@
   <!-- The HTML for each view goes here -->
   <div class="container">
     {{{body}}}
-
-  {{#if messages.error}}
-    <div class="alert alert-danger" role="alert">
-      {{messages.error}}
-    </div>
-  {{/if}}
-</div>
+    {{#if messages.error}}
+      <div class="alert alert-danger" role="alert">
+        {{messages.error}}
+      </div>
+    {{/if}}
+  </div>
 
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 </body>
