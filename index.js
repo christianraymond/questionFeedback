@@ -49,8 +49,4 @@ app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
 app.get('/admin', employeesroute.adminAccess);
 
 app.use(express.static("public"));
-app.set('port', process.env.PORT || 3000);
-const port = 3000;
-app.listen(port, function() {
-  console.log("App Listening at http://localhost:" + port);
-});
+app.listen(process.env.PORT || 5000);
