@@ -38,7 +38,7 @@ module.exports = function(models) {
       } else if (employee) {
         console.log(employee);
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
-        res.render('answering', { 
+        res.render('answering', {
           username: employee.username,
           password: passkey,
           answers: employee.answer
@@ -52,16 +52,12 @@ module.exports = function(models) {
               return next(err)
             }
           })
-          .then(function(err, employee) {
-            if (err) {
-              return res.send();
-            } else {
-              req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
+          .then(function(employee) {
+            req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
               res.render('login', {
                 username: employee,
                 password: passkey,
               })
-            }
           });
       };
     });
