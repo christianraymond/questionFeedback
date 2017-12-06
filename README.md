@@ -1,14 +1,15 @@
 # Employee'sFeeback.
 This app allows users to respond to a question sent by it's team.
-User get URL sent to them, simply click on the link, then be redirected to a login page where they need to register first before submiting the response back to the sender.
+User get a URL sent to them, then simply click on the link, from there it willredirected them to a login page where they need to register first before submiting the response back to the sender.
 
-The sender will be able to login as Admim, then be redirected to a page where they can easily see the users responses. 
+The sender will be able to login as Admim, then be redirected to a page where they can easily see the users responses.
+
 ## Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing
 purposes. See deployment for notes on how to deploy the project on a live system.
 
-Clone this [Repositoy](https://github.com/christianraymond/waiter_webapp), copy and past:
-`git clone https://github.com/christianraymond/waiter_webapp` inside your project folder.
+Clone this [Repositoy](https://github.com/christianraymond/questionFeedback.git), copy and past:
+`git clone https://github.com/christianraymond/questionFeedback.git` inside your project folder.
 
 # Prerequisites
 Things you need to install and how to install them.
@@ -151,7 +152,7 @@ $ heroku local web Your app should now be running on http://localhost:5000/.
 - [NPM](https://www.npmjs.com/)(Node Package Manager/dependencies).
 
 Visit this site online.
-- [Launch](https://pure-citadel-24793.herokuapp.com/)
+- [Launch](https://employeesfeedback.herokuapp.com)
 
 # Author
 - Christian Ngubana -initiative work -[Christian Raymond](https://github.com/christianraymond?tab=repositories)
@@ -161,6 +162,3 @@ Visit this site online.
 
 # License
 This project is licensed ender ISC -see [ISC](https://www.isc2.org/) for more information.
-
-# Acknowledgments
-  - Andre Vermeulen.
