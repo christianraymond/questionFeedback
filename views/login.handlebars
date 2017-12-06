@@ -10,7 +10,7 @@
 
     <div class="col-md-6 col-xs-12">
       <div class="card col-md-8 col-xs-8 px-3 py-4">
-        <form class="form-signin" action="" method="post">
+        <form class="form-signin" action="/login" method="post">
           {{#if messages.success}}
             <div class="alert alert-success" role="alert">
               {{messages.success}}
@@ -20,11 +20,11 @@
           <p class="col-md-12 text-md-center mt-2">Login to answer this question</p>
           <input type="text" class="form-control mb-1" name="name" placeholder="Username" required autofocus>
           <input type="password" class="form-control mb-1" name="passkey" placeholder="Password" required>
-          <input type="password" class="form-control mb-1" name="confirmPasskey"placeholder="Confirm Password" required>
+          <input type="password" class="form-control mb-1" name="confirmPasskey" placeholder="Confirm Password" required>
           <button class="btn btn-lg btn-primary btn-block  mt-2" type="submit">Log in</button>
           <div class="col-md-12 text-md-center mt-2">
-          <input type="checkbox" checked="checked"> Remember me :
-          <span class="psw">Forgot <a href="login">password?</a></span>
+            <input type="checkbox" checked="checked"> Remember me :
+            <span class="psw">Forgot <a href="login">password?</a></span>
           </div>
       </div>
 

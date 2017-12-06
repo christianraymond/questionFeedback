@@ -18,9 +18,8 @@ const employeesModel = new EmployeesSchema({
     unique: true,
     sparse: true
   },
-
   password: String,
-  answers: Object
+  answersModel: Object
 
 });
 //Avoiding duplicates in employee's Schema

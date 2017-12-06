@@ -1,12 +1,13 @@
 module.exports = function(models) {
 
-  function loginFunc(req, res, next) {
+  function registeringUser(req, res, next) {
     models.find({}, function(err, employees) {
       if (err) {
         return next(err)
       } else {
-        res.render('login', {})
+        username: employees
       }
+      res.render('login')
     })
   }
 
@@ -15,34 +16,25 @@ module.exports = function(models) {
     const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
     const passkey = req.body.passkey;
     const confirmPasskey = req.body.confirmPasskey;
-    var answersObject = {};
-    var allAnswers = req.body.answer;
-
-
-    var user = new models({
-      username: name,
-      password: passkey,
-      answers: allAnswers
-    })
 
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
       res.redirect('/login');
+    } else if (name == 'Admin' && passkey == 'admin') {
+      res.redirect('/admin')
     }
+    //Create a Login POSTroute to find and create employeesNames
     models.findOne({
       username: name,
-      password: passkey
+      password: passkey,
     }, function(err, employee) {
       if (err) {
-        return res.send();
+        return res.send(err);
       } else if (employee) {
         console.log(employee);
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
-        res.render('answering', {
-          username: employee.username,
-          password: passkey,
-          answers: employee.answer
-        })
+        res.redirect('/answering/' + employee.username);
+
       } else if (!employee) {
         models.create({
             username: name,
@@ -52,66 +44,63 @@ module.exports = function(models) {
               return next(err)
             }
           })
+
           .then(function(employee) {
             req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
-              res.render('login', {
-                username: employee,
-                password: passkey,
-              })
+            res.render('login', {
+              username: employee,
+              password: passkey,
+            })
           });
       };
     });
   }
 
+  function renderFeedback(req, res, next) {
+    const employeesName = req.params.username;
+    res.render('answering', {
+      username: employeesName
+    });
+  }
+
   function employeesFeedbackStatus(req, res, next) {
+    const employeesName = req.params.username;
     var answersObject = {};
-    const name1 = req.params.username;
-    const name = name1.substring(0, 1).toUpperCase() + name1.substring(1);
-    const passkey = req.body.passkey;
-    const confirmPasskey = req.body.confirmPasskey;
-    var allAnswers = req.body.answer
+    var AllAnswers = req.body.answer;
 
-    var user = new models({
-      username: name,
-      password: passkey,
-      answers: allAnswers
-    });
-
-    if (!Array.isArray(allAnswers)) {
-      allAnswers = [allAnswers]
+    if (!Array.isArray(AllAnswers)) {
+      AllAnswers = [AllAnswers]
     }
-    allAnswers.forEach(function(singAnswer) {
-      answersObject[singAnswer] = true
+    AllAnswers.forEach(function(aResponse) {
+      answersObject[aResponse] = true
     });
-
     models.findOneAndUpdate({
-      username: name,
-      password: passkey,
-      answers: answersObject
+      username: employeesName
+    }, {
+      answersModel: answersObject
     }, function(err, reply) {
       if (err) {
         console.log(err);
       } else if (!reply) {
-        models.giveLoginAccess.create({
-            username: name,
-            password: passkey,
-            answers: answersObject
-          }),
-          req.flash("success", "Hello, " + user.username + " Your response has been saved.")
-        res.redirect('/answering/' + username.name)
-      };
-    })
+        models.create({
+          username: employeesName,
+          answersModel: answersObject
+        });
+      }
+    });
+    req.flash('success', "Your response has successfully been saved.")
+    res.render('answering');
   }
 
-  function countEmployees(employeesCounter) {
-    if (employeesCounter === 6) {
-      return 'Enough'
-    } else if (employeesCounter > 26) {
-      return 'Aything'
+  function colorResponses(countEmployees) {
+    if (countEmployees === 83) {
+      return 'bg-success'
+    } else if (countEmployees > 3) {
+      return 'bg-warning'
     } else {
-      return 'Another thing'
+      return 'big-danger'
     }
-  };
+  }
 
   function adminAccess(req, res, next) {
     Yes = [];
@@ -121,37 +110,41 @@ module.exports = function(models) {
       if (err) {
         return next(err)
       } else {
-        for (const x = 0; x < reply.length; x++) {
-          const responsess = reply[x].answers;
-          for (const oneAnswer in responsess) {
-            if (oneAnswer === "Yes") {
-              Yes.push(reply[x].username)
-            } else if (oneAnswer === "No") {
-              No.push(reply[x].username)
-            } else if (oneAnswer === "Null") {
-              Null.push(reply[x].username)
+        for (var i = 0; i < reply.length; i++) {
+          var feedback = reply[i].answersModel;
+          for (var response in feedback) {
+            if (response == 'Yes') {
+              Yes.push(reply[i].username);
+            } else if (response == 'No') {
+              No.push(reply[i].username);
+            } else if (response == 'Null') {
+              Null.push(reply[i].username)
             }
           }
         }
       }
       res.render("admin", {
         posResponseNames: Yes,
-        posResponseNamesCounter: Yes.length,
+        yesCounter: Yes.length,
+        yesStyle: colorResponses(Yes.length),
 
         negReponseNames: No,
-        negReponseNamesCounter: No.length,
+        noCounter: No.length,
+        noStyle: colorResponses(No.length),
 
         nullResponseNames: Null,
-        nullResponseNamesCounter: Null.length
+        nullCounter: Null.length,
+        nullStyle: colorResponses(Null.length),
       });
     });
   }
 
   return {
-    loginFunc,
+    registeringUser,
     giveLoginAccess,
+    renderFeedback,
     employeesFeedbackStatus,
-    countEmployees,
+    colorResponses,
     adminAccess
   }
 }

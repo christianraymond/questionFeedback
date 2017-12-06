@@ -38,14 +38,13 @@ app.get('/about', function(req, res) {
   res.render('about');
 })
 
-app.get('/admin', function(req, res) {
-  res.render('admin');
-})
 
-app.get('/login', employeesroute.loginFunc);
+app.get('/login', employeesroute.registeringUser);
 app.post('/login', employeesroute.giveLoginAccess);
-app.get('/answering/:username', employeesroute.employeesFeedbackStatus);
+
+app.get('/answering/:username', employeesroute.renderFeedback);
 app.post('/answering/:username', employeesroute.employeesFeedbackStatus);
+
 app.get('/admin', employeesroute.adminAccess);
 
 app.use(express.static("public"));

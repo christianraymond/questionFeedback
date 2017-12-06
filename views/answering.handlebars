@@ -10,9 +10,8 @@
   <div class="col-md-12">
     <div class="jumbotron jumbotron-fluid pt-4">
       <div class="container">
-        <form class="favAnswers" action="/answering/:username" method="post">
+        <form class="favAnswers" action="/answering/{{username}}" method="post">
           <p class="lead mb-4">Please select one of the answer below:</p>
-
           {{#if messages.success}}
             <div class="alert alert-success" role="alert">
               {{messages.success}}
@@ -21,11 +20,11 @@
 
           <div class="col-md-12 text-center mb-3">
             <div class="btn-group" data-toggle="buttons">
-              <input type="checkbox" name="answer" value="Yes" {{#if allAnswers.Yes}} checked {{/if}}> Yes
-              <input type="checkbox" name="answer" value="No" {{#if allAnswers.No}} checked {{/if}}> No
-              <input type="checkbox" name="answer" value="Null" {{#if allAnswers.Null}} checked {{/if}}> Null
-              <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
+              <input type="checkbox" name="answer" value="Yes" {{#if AllAnswers.Yes}} checked {{/if}}> Yes
+              <input type="checkbox" name="answer" value="No" {{#if AllAnswers.No}} checked {{/if}}> No
+              <input type="checkbox" name="answer" value="Null" {{#if AllAnswers.Null}} checked {{/if}}> Null
             </div>
+            <button type="submit" class="btn btn-primary btn-lg btn-block">Submit</button>
             <!-- //Allow only one checkbox to be selected at once -->
             <script>
               $(document).ready(function() {
