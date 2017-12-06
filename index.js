@@ -34,10 +34,6 @@ app.use(bodyParser.urlencoded({
 app.get('/', function(req, res) {
   res.render('home')
 })
-app.get('/about', function(req, res) {
-  res.render('about');
-})
-
 
 app.get('/login', employeesroute.registeringUser);
 app.post('/login', employeesroute.giveLoginAccess);

@@ -20,8 +20,10 @@ module.exports = function(models) {
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
       res.redirect('/login');
+      return;
     } else if (name == 'Admin' && passkey == 'admin') {
       res.redirect('/admin')
+      return;
     }
     //Create a Login POSTroute to find and create employeesNames
     models.findOne({
@@ -34,6 +36,7 @@ module.exports = function(models) {
         console.log(employee);
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
         res.redirect('/answering/' + employee.username);
+        return;
 
       } else if (!employee) {
         models.create({
