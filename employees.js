@@ -77,6 +77,7 @@ module.exports = function(models) {
     AllAnswers.forEach(function(aResponse) {
       answersObject[aResponse] = true
     });
+//Allow user to return and edit the response if they need to
     models.findOneAndUpdate({
       username: employeesName
     }, {
@@ -96,9 +97,9 @@ module.exports = function(models) {
   }
 
   function colorResponses(countEmployees) {
-    if (countEmployees === 83) {
+    if (countEmployees === 1) {
       return 'bg-success'
-    } else if (countEmployees > 3) {
+    } else if (countEmployees > 0) {
       return 'bg-warning'
     } else {
       return 'big-danger'

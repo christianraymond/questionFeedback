@@ -7,71 +7,70 @@
   </div>
 </nav>
 
+<div class="row d-flex justify-content-between col-md-12 col-lg-12 col-sm-12 center-block" data-children=".item">
+  <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" {{yesStyle}} style="max-width: 20rem;">
+    <div class="card-header">Yes<span class="badge badge-secondary ml-2">{{yesCounter}}</span></div>
+    <div class="card-body">
+      <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#yesCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
+    </div>
+  </div>
+
+
   <div class="row d-flex justify-content-between col-md-12 col-lg-12 col-sm-12 center-block" data-children=".item">
-    <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" style="max-width: 20rem;">
-      <div class="card-header">Yes<span class="badge badge-secondary ml-2">{{posResponseNamesCounter}}</span></div>
+    <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" {{noStyle}} style="max-width: 20rem;">
+      <div class="card-header">No<span class="badge badge-secondary ml-2">{{noCounter}}</span></div>
       <div class="card-body">
-        <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#yesCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
+        <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#noCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
       </div>
     </div>
 
 
     <div class="row d-flex justify-content-between col-md-12 col-lg-12 col-sm-12 center-block" data-children=".item">
-      <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" style="max-width: 20rem;">
-        <div class="card-header">No<span class="badge badge-secondary ml-2">{{negReponseNamesCounter}}</span></div>
+      <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" {{nullStyle}} style="max-width: 20rem;">
+        <div class="card-header">Null<span class="badge badge-secondary ml-2">{{nullCounter}}</span></div>
         <div class="card-body">
-          <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#noCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
+          <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#nullCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
         </div>
       </div>
+    </div>
 
 
-
-      <div class="row d-flex justify-content-between col-md-12 col-lg-12 col-sm-12 center-block" data-children=".item">
-        <div class="card text-white mb-2 mb-2 col-md-4 col-sm-12" style="max-width: 20rem;">
-          <div class="card-header">Null<span class="badge badge-secondary ml-2">{{nullResponseNamesCounter}}</span></div>
-          <div class="card-body">
-            <p class="card-text"><a data-toggle="collapse" data-parent="#exampleAccordion" href="#nullCollapse" aria-expanded="false" aria-controls="collapse1">view names <span class="lnr lnr-chevron-right"></span></a></p>
-          </div>
+    <div class="collapse mt-5 mx-5" id="yesCollapse" role="tabpanel">
+      <div class="card card-body">
+        <h2 class="display-6">Yes</h2>
+        <div class="row">
+          {{#each posResponseNames}}
+            <div class="col-md-3 col-lg-2 mt-4">
+              <li id="names">{{this}}</li>
+            </div>
+          {{/each}}
         </div>
       </div>
+    </div>
 
 
-      <div class="collapse mt-5 mx-5" id="yesCollapse" role="tabpanel">
-        <div class="card card-body">
-          <h2 class="display-6">Yes</h2>
-          <div class="row">
-            {{#each posResponseNames}}
-              <div class="col-md-3 col-lg-2 mt-4">
-                <li id="names">{{this}}</li>
-              </div>
-            {{/each}}
-          </div>
+    <div class="collapse mt-5 mx-5" id="noCollapse" role="tabpanel">
+      <div class="card card-body">
+        <h2 class="display-6">No</h2>
+        <div class="row">
+          {{#each negReponseNames}}
+            <div class="col-md-3 col-lg-2 mt-4">
+              <li id="names">{{this}}</li>
+            </div>
+          {{/each}}
         </div>
       </div>
+    </div>
 
-
-      <div class="collapse mt-5 mx-5" id="noCollapse" role="tabpanel">
-        <div class="card card-body">
-          <h2 class="display-6">No</h2>
-          <div class="row">
-            {{#each negReponseNames}}
-              <div class="col-md-3 col-lg-2 mt-4">
-                <li id="names">{{this}}</li>
-              </div>
-            {{/each}}
-          </div>
+    <div class="collapse mt-5 mx-5" id="nullCollapse" role="tabpanel">
+      <div class="card card-body">
+        <h2 class="display-6">Null</h2>
+        <div class="row">
+          {{#each nullResponseNames}}
+            <div class="col-md-3 col-lg-2 mt-4">
+              <li id="names">{{this}}</li>
+            </div>
+          {{/each}}
         </div>
       </div>
-
-      <div class="collapse mt-5 mx-5" id="nullCollapse" role="tabpanel">
-        <div class="card card-body">
-          <h2 class="display-6">Null</h2>
-          <div class="row">
-            {{#each nullResponseNames}}
-              <div class="col-md-3 col-lg-2 mt-4">
-                <li id="names">{{this}}</li>
-              </div>
-            {{/each}}
-          </div>
-        </div>
-      </div>
+    </div>
