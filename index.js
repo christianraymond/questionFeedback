@@ -35,7 +35,10 @@ app.get('/', function(req, res) {
   res.render('home')
 })
 
-app.get('/login', employeesroute.registeringUser);
+app.get('/register', employeesroute.registeringUser);
+app.post('/register', employeesroute.giveLoginAccess);
+
+app.get('/login', employeesroute.loginUser);
 app.post('/login', employeesroute.giveLoginAccess);
 
 app.get('/answering/:username', employeesroute.renderFeedback);

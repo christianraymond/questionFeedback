@@ -7,6 +7,17 @@ module.exports = function(models) {
       } else {
         username: employees
       }
+      res.render('register')
+    })
+  }
+
+  function loginUser(req, res, next) {
+    models.find({}, function(err, employees) {
+      if (err) {
+        return next(err)
+      } else {
+        username: employees
+      }
       res.render('login')
     })
   }
@@ -19,7 +30,7 @@ module.exports = function(models) {
 
     if (passkey != confirmPasskey) {
       req.flash('error', 'Please enter the same password');
-      res.redirect('/login');
+      res.redirect('/register');
       return;
     } else if (name == 'Admin' && passkey == 'admin') {
       res.redirect('/admin')
@@ -31,7 +42,7 @@ module.exports = function(models) {
       password: passkey,
     }, function(err, employee) {
       if (err) {
-        return res.send(err);
+        res.send(err)
       } else if (employee) {
         console.log(employee);
         req.flash('success', 'Hello, Welcome back ' + employee.username + '!')
@@ -50,10 +61,7 @@ module.exports = function(models) {
 
           .then(function(employee) {
             req.flash("success", "Hello " + employee.username + " you have successfully registered your name!");
-            res.render('login', {
-              username: employee,
-              password: passkey,
-            })
+            res.redirect('/login')
           });
       };
     });
@@ -77,7 +85,7 @@ module.exports = function(models) {
     AllAnswers.forEach(function(aResponse) {
       answersObject[aResponse] = true
     });
-//Allow user to return and edit the response if they need to
+    //Allow user to return and edit the response if they need to
     models.findOneAndUpdate({
       username: employeesName
     }, {
@@ -145,6 +153,7 @@ module.exports = function(models) {
 
   return {
     registeringUser,
+    loginUser,
     giveLoginAccess,
     renderFeedback,
     employeesFeedbackStatus,
